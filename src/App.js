@@ -1,22 +1,30 @@
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  Root,
+  FormBuilder,
+  ErrorPage,
+  FormBuilderPreview
+} from './component'
 import './App.css';
 import "./index.css";
-import { lazy, Suspense } from 'react';
-const FormBuilder = lazy(() => import('compose/FormBuilder'))
-console.log(FormBuilder)
-const data = {
-  access_token: "eyJraWQiOiJkNzc3ODc1YS1kMzNhLTQ5ZDMtYmZkOC01MDZiMWY3NzI1MTUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkMGMxY2E5Ny0wMGI0LTRiY2ItODkzZi1iMTkzYzU1MzE3OGIiLCJpc3MiOiJodHRwczpcL1wvY3gtZGV2LWF1dGgtc2VydmVyLnVzZWNvbXBvc2UuY29tIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYWRtaW4iLCJnaXZlbl9uYW1lIjoiQWRtaW4iLCJhdWQiOiJjb21wb3NlLWNsaWVudCIsIm5iZiI6MTY2ODA1NjcwOCwic2NvcGUiOlsib3BlbmlkIiwicHJvZmlsZSJdLCJuYW1lIjoiQWRtaW4gQWRtaW4iLCJleHAiOjE2NjgwOTk5MDgsImlhdCI6MTY2ODA1NjcwOCwiZmFtaWx5X25hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AdXNlY29tcG9zZS5jb20ifQ.eOuqUsSWUaTanY3rWCYttH1GsUJ0CgKluw3fXVCzarWA-X2dowJGnvlLuLnr206ZvtEXfjbXIlH3paoxds5FymgCp_6_9YCt4ZD49YkoGwJnepS8PZgAJVjtxZTJfnm08_7RklL2xsEELzg3AASykyYGToIUhkzPr-A8J3Gw8cDEr8YhMD7Vo6H382zVYHVhL6u2WwH8_EaQCzOn0tZ5XIgOLI-Qo7U9bHKtONbX8oN-4WP85Z6AJ1bkyeSv0wu377GiUj-uPu0xwpBsIvyGjVNMaNaWmcd5171p_gTSlHLUWT1GcJbj6bE8TW-gnSY5Ens4aLoIcBjpe-6vvyXmpw",
-  expires_in: 43199,
-  id_token: "eyJraWQiOiJkNzc3ODc1YS1kMzNhLTQ5ZDMtYmZkOC01MDZiMWY3NzI1MTUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkMGMxY2E5Ny0wMGI0LTRiY2ItODkzZi1iMTkzYzU1MzE3OGIiLCJhdWQiOiJjb21wb3NlLWNsaWVudCIsImF6cCI6ImNvbXBvc2UtY2xpZW50IiwiaXNzIjoiaHR0cHM6XC9cL2N4LWRldi1hdXRoLXNlcnZlci51c2Vjb21wb3NlLmNvbSIsIm5hbWUiOiJBZG1pbiBBZG1pbiIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjY4MDU4NTA4LCJnaXZlbl9uYW1lIjoiQWRtaW4iLCJpYXQiOjE2NjgwNTY3MDgsImZhbWlseV9uYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQHVzZWNvbXBvc2UuY29tIn0.Abrk8nKSFR_FxS-7be2wwFxCh_9BbUC3FQf7A_GdjEzrbGWi_aOet6BrxNdZchd1zNdI2vyLN0E_tPY2M6mrUbCy5NhMkCuq_0JolDTxeKM5Xe5rhqcHA7RE2YsKB6ajwMRhOab2tR4Mq0CN2xgYLNrENjwstcwQt2bu123j-j5UgnvKdjfB3D0-U8rq_sXqneuRh1F1HzRX-LPVZNWArb0R02orPw-WBxfUMiG_zRP2yoDAP7CXG8Xgu6hRZLf0ZqGFG--hEEt-Pmj6qdEioaSJnr122pn7YbSE7YYD2PczFxGBYbX_a2lP2CsHZCV_KMeg1ngcVZ76LGeyH5Fwog",
-  refresh_toke: "3hmrJ0b4h6JJXrhKnaKd6fq53GoDoTkeclnzAo3Ux3l4pbHCQKiDpNaTVt0J-qhyJUERjA1U129lQqXOCWM3VBAVd2Dtnu0E8WhQHOmSRuXk8mIsqWj57Alv7r3lqBHU",
-  scope: "openid profile",
-  token_type: "Bearer",
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "builder/:id",
+        element: <FormBuilder />
+      },
+      {
+        path: "preview/:id",
+        element: <FormBuilderPreview />
+      }
+    ]
+  }
+])
+const App = () => {
+  return <RouterProvider router={router} />
 }
-const App = () => (
-  <div className="container">
-    <Suspense fallback={<>loading..</>}>
-      <FormBuilder tokenData={data} formId={'e9129f18-9c26-433f-b5c3-7cfa41952241'} returnUrl={'/home'} />
-    </Suspense>
-  </div>
-);
-
 export default App;
