@@ -1,2 +1,4 @@
-import('./bootstrap')
-export default true
+import("./bootstrap");
+if (module.hot) {
+  module.hot.accept();
+}
