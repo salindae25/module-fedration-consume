@@ -203,6 +203,11 @@ module.exports = function (webpackEnv) {
     // This means they will be the "root" imports that are included in JS bundle.
     entry: paths.appIndexJs,
     output: {
+      library: { type: "module" },
+      environment: {
+        module: true,
+        dynamicImport: true, // Note you need to enable `dynamicImport ` here
+      },
       // The build folder.
       path: paths.appBuild,
       // Add /* filename */ comments to generated require()s in the output.
@@ -231,6 +236,7 @@ module.exports = function (webpackEnv) {
           ((info) =>
             path.resolve(info.absoluteResourcePath).replace(/\\/g, "/")),
     },
+    externalsType: "module",
     cache: {
       type: "filesystem",
       version: createEnvironmentHash(env.raw),
@@ -565,7 +571,7 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     experiments: {
-      ...(true ? { outputModule: true } : undefined),
+      outputModule: true,
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
@@ -578,6 +584,7 @@ module.exports = function (webpackEnv) {
           },
           isEnvProduction
             ? {
+                scriptLoading: "module",
                 minify: {
                   removeComments: true,
                   collapseWhitespace: true,
