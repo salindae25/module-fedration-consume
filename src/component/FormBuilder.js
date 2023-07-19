@@ -1,34 +1,50 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 const ComposeFormBuilder = lazy(() => import("compose/FormBuilder"));
 const data = {
   access_token:
-    "eyJraWQiOiJlMjA5MTNiZC05ZThiLTQxZjItODYxMC0wZjFmZDk1ZGE4YWIiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJmNWJiMjZiOS1mZjlkLTQ5ODgtODQyYy1jYWExZTUyOTRkZGMiLCJhdWQiOiJjb21wb3NlLWNsaWVudCIsIm5iZiI6MTY4NjU0MjE4OCwic2NvcGUiOlsib3BlbmlkIiwicHJvZmlsZSIsIm1lc3NhZ2UucmVhZCIsImVtYWlsIiwibWVzc2FnZS53cml0ZSJdLCJpc3MiOiJodHRwczpcL1wvY3gtcWEtYXV0aC1zZXJ2ZXIudXNlY29tcG9zZS5jb20iLCJleHAiOjE2ODY1ODUzODgsImlhdCI6MTY4NjU0MjE4OCwiQVVUSF9GTE9XIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwiQURESVRJT05BTF9QUk9QRVJUSUVTIjp7Im1iay11c2VyLWlkIjoiYmExMzE0M2EtMjNiZS00MmY2LTgzZjYtMGZiNjdkZTNiOGUxIiwiZm9ybS1pZCI6IjhlMjFiYWVjLThjNDktNDI1Ni1iNDgwLTM1ZTlhNmNiODVlNSIsImNvbXBvc2UtdXNlci1pZCI6ImY1YmIyNmI5LWZmOWQtNDk4OC04NDJjLWNhYTFlNTI5NGRkYyJ9fQ.MO1IVM3ee60XNHaowStneLSlTxtWzjWrlgXT8jyzN0R_JIUQJN5_6CXMscf1TnYf0kXpN5W2LmCFr9l4iz_ZjMsXomwTHJ2QyJkhW5TzJzwZLJE6UorkN5h0_bW0EBDjBjfsXi8m9LJUHbz5-y8HYHS-FMrj8U-j3dv_lZR_vKEM3G1caB1b01agJ2z8c7S6FDdkOGJzyMzuoM9Z9ushHkUf3wlBtb5tDPQqW8D4BvrDluYb0jSL_3r5Vm9sxqOgEwIeY4GTdDby0DidOiSvj_gTOecxfqUL-tuynVk60tRR5vBB_jCVwWnv9DjPxCXxAyomEtcSYeS9oRasHSlCeA",
+    "eyJraWQiOiJlMjA5MTNiZC05ZThiLTQxZjItODYxMC0wZjFmZDk1ZGE4YWIiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyMDk0ZWYwOC1hY2U0LTQ5YjctYWQ5YS02YTE4NTA1N2Q0OWEiLCJpc3MiOiJodHRwczpcL1wvY3gtcWEtYXV0aC1zZXJ2ZXIudXNlY29tcG9zZS5jb20iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiIsImdpdmVuX25hbWUiOiJOZXdTdXBlckFkbWluIiwiQVVUSF9GTE9XIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwiYXVkIjoiY29tcG9zZS1jbGllbnQiLCJuYmYiOjE2ODY4ODczOTAsInNjb3BlIjpbIm9wZW5pZCIsInByb2ZpbGUiXSwibmFtZSI6Ik5ld1N1cGVyQWRtaW4gMiIsImV4cCI6MTY4NjkzMDU5MCwiaWF0IjoxNjg2ODg3MzkwLCJmYW1pbHlfbmFtZSI6IjIiLCJlbWFpbCI6ImFkbWluQHVzZWNvbXBvc2UuY29tIn0.rT0Q90DfB2-t4JD8A5BVj9c8MJEjwJ1lp8Uce3iH3kdTkFTiCdYs0mCBhK0sOmwAt1FpMHVQRym5w_KtcxOlEHaCqgpmC3rOcoZmBVFNnXDSZDhHlnQ_yjQfCjbe3jO4ihcFGQKOJbgteV7WdS6YlIRnqddtYGfQ_UDefQ0TYoiqet8FgZMkREA-unVlMJMI6GkMIsX12kdMDBbhMvVT7CQWefB6OyQcjZqwj3_8kAk9T8eVr2jtMIOr5QjfUh_AWVWJILpgjcBGgE37jglxkqsJLIFORFnXbY_2-xmo9pnC2FRZ2THiy6i5l0oZCorNdTKQscNmoyUQKBFiHy_Eng",
+};
 
-  expires_in: 43199,
-  id_token:
-    "eyJraWQiOiJkNzc3ODc1YS1kMzNhLTQ5ZDMtYmZkOC01MDZiMWY3NzI1MTUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkMGMxY2E5Ny0wMGI0LTRiY2ItODkzZi1iMTkzYzU1MzE3OGIiLCJhdWQiOiJjb21wb3NlLWNsaWVudCIsImF6cCI6ImNvbXBvc2UtY2xpZW50IiwiaXNzIjoiaHR0cHM6XC9cL2N4LWRldi1hdXRoLXNlcnZlci51c2Vjb21wb3NlLmNvbSIsIm5hbWUiOiJBZG1pbiBBZG1pbiIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNjY4MDU4NTA4LCJnaXZlbl9uYW1lIjoiQWRtaW4iLCJpYXQiOjE2NjgwNTY3MDgsImZhbWlseV9uYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQHVzZWNvbXBvc2UuY29tIn0.Abrk8nKSFR_FxS-7be2wwFxCh_9BbUC3FQf7A_GdjEzrbGWi_aOet6BrxNdZchd1zNdI2vyLN0E_tPY2M6mrUbCy5NhMkCuq_0JolDTxeKM5Xe5rhqcHA7RE2YsKB6ajwMRhOab2tR4Mq0CN2xgYLNrENjwstcwQt2bu123j-j5UgnvKdjfB3D0-U8rq_sXqneuRh1F1HzRX-LPVZNWArb0R02orPw-WBxfUMiG_zRP2yoDAP7CXG8Xgu6hRZLf0ZqGFG--hEEt-Pmj6qdEioaSJnr122pn7YbSE7YYD2PczFxGBYbX_a2lP2CsHZCV_KMeg1ngcVZ76LGeyH5Fwog",
-  refresh_toke:
-    "3hmrJ0b4h6JJXrhKnaKd6fq53GoDoTkeclnzAo3Ux3l4pbHCQKiDpNaTVt0J-qhyJUERjA1U129lQqXOCWM3VBAVd2Dtnu0E8WhQHOmSRuXk8mIsqWj57Alv7r3lqBHU",
-  scope: "openid profile",
-  token_type: "Bearer",
+const secondToken = {
+  access_token:
+    "eyJraWQiOiI5NmQ2MzU2Ny1hNTc3LTQxMGQtYWQ0Ny03MDQxOGNkMmQwZDkiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlNTAwNTE5OS0yNTI0LTQ4ZTItYTlmZS01MWI4MzBmNGJjNGYiLCJjb25zZW50ZWRfZGF0ZV90aW1lIjoxNjg5NjUzMTAyMzI1LCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODg5OSIsInByZWZlcnJlZF91c2VybmFtZSI6Im1pcm9iNjE2MzZAbXV6aXRwLmNvbSIsImdpdmVuX25hbWUiOiJNQksiLCJBVVRIX0ZMT1ciOiJhdXRob3JpemF0aW9uX2NvZGUiLCJhdWQiOiJjb21wb3NlLWNsaWVudCIsIm5iZiI6MTY4OTY2Nzk4NSwic2NvcGUiOlsib3BlbmlkIiwicHJvZmlsZSJdLCJuYW1lIjoiTUJLIE1pcm9iZSIsImV4cCI6MTY4OTcwMzk4NSwiaWF0IjoxNjg5NjY3OTg1LCJmYW1pbHlfbmFtZSI6Ik1pcm9iZSIsImVtYWlsIjoibWlyb2I2MTYzNkBtdXppdHAuY29tIiwiY29uc2VudGVkIjp0cnVlfQ.iyn3QmHGlyLKXn3Am_mthIi3AFPl3opOoy2SLnJi_FJxwIsschd2DPWfKwijf_JwCOOASEOD3rp19Hh9Pe_3q1-rCdtvHcEy0DD1faMndthBNqA3EqnET3-qaVCoTmiG-giMcWMIzySpNa5I6GAaYDINqP3P0BhH4wkBdc6OotK5dyM9uVloXzxWKJPTKG8Se_wh2fQCR1lvKyfK1sF2czXdpoH_qs_V-FIpV7gt2gV8prHMLGtxXeKxS_iN4KTHVWLiZoC5gKoBK8XxL2SrQzUdaZTEXFjPSnRU4Rs_ZTuBEfv6WYHx732Z1-khvjFk-Wb8ZMNeVilaDwuVlZmIdQ",
 };
 const FormBuilder = () => {
   const params = useParams();
-  console.log(params);
-
+  const [tokenData, setTokenData] = useState(data);
   const formId = params?.id;
+  const token = params?.token;
+  useEffect(() => {
+    if (token) {
+      setTokenData({
+        access_token: token,
+      });
+    }
+  }, [token]);
+  const tokenGenerate = async () => {
+    console.log("token expired");
+    await sleep(200);
+    setTokenData(secondToken);
+    console.log("token set");
+  };
+
   return (
     <>
       <Suspense fallback={<>loading..</>}>
         <ComposeFormBuilder
-          tokenData={data}
+          tokenData={tokenData}
           formId={formId}
+          onTokenExpiry={tokenGenerate}
           returnUrl={"/home"}
         />
       </Suspense>
     </>
   );
 };
-
 export default FormBuilder;
+
+// generate sleep async function
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
