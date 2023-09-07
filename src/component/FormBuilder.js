@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const ComposeFormBuilder = lazy(() => import("compose/FormBuilder"));
 const data = {
   access_token:
-    "eyJraWQiOiJlMjA5MTNiZC05ZThiLTQxZjItODYxMC0wZjFmZDk1ZGE4YWIiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyMDk0ZWYwOC1hY2U0LTQ5YjctYWQ5YS02YTE4NTA1N2Q0OWEiLCJpc3MiOiJodHRwczpcL1wvY3gtcWEtYXV0aC1zZXJ2ZXIudXNlY29tcG9zZS5jb20iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiIsImdpdmVuX25hbWUiOiJOZXdTdXBlckFkbWluIiwiQVVUSF9GTE9XIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwiYXVkIjoiY29tcG9zZS1jbGllbnQiLCJuYmYiOjE2ODY4ODczOTAsInNjb3BlIjpbIm9wZW5pZCIsInByb2ZpbGUiXSwibmFtZSI6Ik5ld1N1cGVyQWRtaW4gMiIsImV4cCI6MTY4NjkzMDU5MCwiaWF0IjoxNjg2ODg3MzkwLCJmYW1pbHlfbmFtZSI6IjIiLCJlbWFpbCI6ImFkbWluQHVzZWNvbXBvc2UuY29tIn0.rT0Q90DfB2-t4JD8A5BVj9c8MJEjwJ1lp8Uce3iH3kdTkFTiCdYs0mCBhK0sOmwAt1FpMHVQRym5w_KtcxOlEHaCqgpmC3rOcoZmBVFNnXDSZDhHlnQ_yjQfCjbe3jO4ihcFGQKOJbgteV7WdS6YlIRnqddtYGfQ_UDefQ0TYoiqet8FgZMkREA-unVlMJMI6GkMIsX12kdMDBbhMvVT7CQWefB6OyQcjZqwj3_8kAk9T8eVr2jtMIOr5QjfUh_AWVWJILpgjcBGgE37jglxkqsJLIFORFnXbY_2-xmo9pnC2FRZ2THiy6i5l0oZCorNdTKQscNmoyUQKBFiHy_Eng",
+    "eyJraWQiOiI3YTNjMDY5MS02MzljLTQyNDQtYTUyMi1kZjE2Mzg3ZWRjMmUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyMDk0ZWYwOC1hY2U0LTQ5YjctYWQ5YS02YTE4NTA1N2Q0OWEiLCJjb25zZW50ZWRfZGF0ZV90aW1lIjoxNjkzNTY4NTE2MjE3LCJpc3MiOiJodHRwczpcL1wvY3gtcWEtYXV0aC1zZXJ2ZXIudXNlY29tcG9zZS5jb20iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiIsImdpdmVuX25hbWUiOiJTdXBlciBBZG1pbiIsIkFVVEhfRkxPVyI6ImF1dGhvcml6YXRpb25fY29kZSIsImF1ZCI6ImNvbXBvc2UtY2xpZW50IiwibmJmIjoxNjk0MDY4ODUxLCJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIl0sIm5hbWUiOiJTdXBlciBBZG1pbiBVc2VyIiwiZXhwIjoxNjk0MTEyMDUxLCJpYXQiOjE2OTQwNjg4NTEsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlsIjoiYWRtaW5AdXNlY29tcG9zZS5jb20iLCJjb25zZW50ZWQiOnRydWV9.WxSgI312IDKW39VdR4Ux7j0gvU_9ddMl6fQmicdmtNU3SsMxP5KFig1W5YGMj7myl5da3sBa9pkBT5XWgEAzLcM1YcFrqUu-_z0w3daCmheot5_YW4X4JfkiIafFvePoWnwsH3K6Y8kaa6pWw1SAFfBaxJ-LHoo_zffN1MpN40hlHDjrdY-sguYo-KGV3DeYQvMM5n9ySijqekPQE3hgnl4X9JxTjc8kmIaQEwBlm9fmiREvw94dV4IuZdmc5OggkAatoYaLLluxDng9vCNeXAy9f-iHj1bpuzIyb3rm-puJ7tPCVcaQtZsHpQ9ZL6eSYk0PKUnvzafM0v1hz0-g0Q",
 };
 
 const secondToken = {
@@ -12,6 +12,7 @@ const secondToken = {
 };
 const FormBuilder = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const [tokenData, setTokenData] = useState(data);
   const formId = params?.id;
   const token = params?.token;
@@ -36,7 +37,9 @@ const FormBuilder = () => {
           tokenData={tokenData}
           formId={formId}
           onTokenExpiry={tokenGenerate}
-          returnUrl={"/home"}
+          onGoBack={() => {
+            navigate("/");
+          }}
         />
       </Suspense>
     </>

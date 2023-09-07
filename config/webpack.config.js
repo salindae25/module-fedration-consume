@@ -765,7 +765,7 @@ module.exports = function (webpackEnv) {
         filename: "remoteEntry.js",
         library: { type: "module" },
         remotes: {
-          compose: "https://cx-qa-designer.usecompose.com/remoteEntry.js",
+          compose: "http://localhost:3000/remoteEntry.js",
         },
         shared: {
           ...deps,
