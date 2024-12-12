@@ -5,6 +5,7 @@ import {
   ErrorPage,
   FormBuilderPreview,
   WorkflowPreview,
+  HomePage,
 } from "./component";
 import "./App.css";
 import "./index.css";
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
       {
         path: "builder/:id",
         element: <FormBuilder />,

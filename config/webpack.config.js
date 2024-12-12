@@ -34,12 +34,12 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
 
 const reactRefreshRuntimeEntry = require.resolve("react-refresh/runtime");
 const reactRefreshWebpackPluginRuntimeEntry = require.resolve(
-  "@pmmmwh/react-refresh-webpack-plugin"
+  "@pmmmwh/react-refresh-webpack-plugin",
 );
 const babelRuntimeEntry = require.resolve("babel-preset-react-app");
 const babelRuntimeEntryHelpers = require.resolve(
   "@babel/runtime/helpers/esm/assertThisInitialized",
-  { paths: [babelRuntimeEntry] }
+  { paths: [babelRuntimeEntry] },
 );
 const babelRuntimeRegenerator = require.resolve("@babel/runtime/regenerator", {
   paths: [babelRuntimeEntry],
@@ -53,7 +53,7 @@ const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
 const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
 
 const imageInlineSizeLimit = parseInt(
-  process.env.IMAGE_INLINE_SIZE_LIMIT || "10000"
+  process.env.IMAGE_INLINE_SIZE_LIMIT || "10000",
 );
 
 // Check if TypeScript is setup
@@ -61,7 +61,7 @@ const useTypeScript = fs.existsSync(paths.appTsConfig);
 
 // Check if Tailwind config exists
 const useTailwind = fs.existsSync(
-  path.join(paths.appPath, "tailwind.config.js")
+  path.join(paths.appPath, "tailwind.config.js"),
 );
 
 // Get the path to the uncompiled service worker (if it exists).
@@ -181,7 +181,7 @@ module.exports = function (webpackEnv) {
           options: {
             sourceMap: true,
           },
-        }
+        },
       );
     }
     return loaders;
@@ -246,7 +246,7 @@ module.exports = function (webpackEnv) {
         defaultWebpack: ["webpack/lib/"],
         config: [__filename],
         tsconfig: [paths.appTsConfig, paths.appJsConfig].filter((f) =>
-          fs.existsSync(f)
+          fs.existsSync(f),
         ),
       },
     },
@@ -306,7 +306,7 @@ module.exports = function (webpackEnv) {
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
       modules: ["node_modules", paths.appNodeModules].concat(
-        modules.additionalModulePaths || []
+        modules.additionalModulePaths || [],
       ),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
@@ -417,7 +417,7 @@ module.exports = function (webpackEnv) {
               loader: require.resolve("babel-loader"),
               options: {
                 customize: require.resolve(
-                  "babel-preset-react-app/webpack-overrides"
+                  "babel-preset-react-app/webpack-overrides",
                 ),
                 presets: [
                   [
@@ -525,7 +525,7 @@ module.exports = function (webpackEnv) {
                     mode: "icss",
                   },
                 },
-                "sass-loader"
+                "sass-loader",
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -548,7 +548,7 @@ module.exports = function (webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                "sass-loader"
+                "sass-loader",
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
@@ -598,8 +598,8 @@ module.exports = function (webpackEnv) {
                   minifyURLs: true,
                 },
               }
-            : { scriptLoading: "module" }
-        )
+            : { scriptLoading: "module" },
+        ),
       ),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
@@ -655,7 +655,7 @@ module.exports = function (webpackEnv) {
             return manifest;
           }, seed);
           const entrypointFiles = entrypoints.main.filter(
-            (fileName) => !fileName.endsWith(".map")
+            (fileName) => !fileName.endsWith(".map"),
           );
 
           return {
@@ -745,7 +745,7 @@ module.exports = function (webpackEnv) {
           cache: true,
           cacheLocation: path.resolve(
             paths.appNodeModules,
-            ".cache/.eslintcache"
+            ".cache/.eslintcache",
           ),
           // ESLint class options
           cwd: paths.appPath,
@@ -765,7 +765,9 @@ module.exports = function (webpackEnv) {
         filename: "remoteEntry.js",
         library: { type: "module" },
         remotes: {
-          compose: "http://localhost:3000/remoteEntry.js",
+          compose: "http://127.0.0.1:3000/remoteEntry.js",
+          // compose: "https://cg-qa.more.no/remoteEntry.js",
+          // compose: "https://cx-qa-designer.usecompose.com/remoteEntry.js",
         },
         shared: {
           ...deps,
